@@ -35,7 +35,9 @@ function Home() {
         doc.number.toLowerCase().includes(search.toLowerCase()) ||
         doc.title.toLowerCase().includes(search.toLowerCase()) ||
         doc.type.toLowerCase().includes(search.toLowerCase()) ||
-        doc.owner.toLowerCase().includes(search.toLowerCase()) 
+        doc.owner.toLowerCase().includes(search.toLowerCase()) ||
+        doc.createdAt.toLowerCase().includes(search.toLowerCase()) ||
+        doc.updatedAt.toLowerCase().includes(search.toLowerCase())
     );
 
     return (
