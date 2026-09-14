@@ -196,3 +196,93 @@ body {
   font-weight: normal;
   color: #555;
 }
+
+.document-header {
+    margin-bottom: 20px;
+}
+
+.document-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.document-action input {
+  width: 288px;
+  height: 30px;
+  border: 1px solid #888;
+  border-radius: 7px;
+  padding: 0 15px;
+  font-size: 16px;
+}
+
+.document-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.document-table th {
+  background-color: #e9e9e9;
+  font-weight: normal;
+  text-align: left;
+  padding: 10px 9px;
+  border: 1px solid #d8d8d8;
+}
+
+.document-table td {
+  padding: 12px 9px;
+  border: 1px solid #d8d8d8;
+  font-size: 13px;
+}
+
+.btn-upload {
+  background-color: #7ed957;
+  color: black;
+  border: none;
+  padding: 7px 15px;
+  border-radius: 6px;
+}
+
+.btn-edit {
+  background-color: #ffde59;
+  color: black;
+  border: none;
+  padding: 7px 15px;
+  border-radius: 6px;
+}
+
+.btn-delete {
+  background-color: #ff5757;
+  color: black;
+  border: none;
+  padding: 7px 15px;
+  border-radius: 6px;
+}
+
+.btn-download {
+  background-color: #016fbd;
+  color: black;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #016fbd ;
+  color: white;
+}
