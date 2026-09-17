@@ -71,10 +71,11 @@ export const documents = [
 export function useDocumentFilter() {
     const [companyFilter, setCompanyFilter] = useState("");
     const [typeFilter, setTypeFilter] = useState("");
-    return { typeFilter, setTypeFilter, companyFilter, setCompanyFilter };
+    const [statusFilter, setStatusFilter] = useState("");
+    return { typeFilter, setTypeFilter, companyFilter, setCompanyFilter, statusFilter, setStatusFilter };
 }
 
-export function filterDocuments(documents, search, typeFilter, companyFilter) {
+export function filterDocuments(documents, search, typeFilter, companyFilter, statusFilter) {
     return documents.filter((doc) =>
         (
             doc.number.toLowerCase().includes(search.toLowerCase()) ||
@@ -88,7 +89,8 @@ export function filterDocuments(documents, search, typeFilter, companyFilter) {
             doc.updatedAt.toLowerCase().includes(search.toLowerCase())
         ) && 
         (typeFilter === "" || doc.type === typeFilter) &&
-        (companyFilter === "" || doc.company === companyFilter)
+        (companyFilter === "" || doc.company === companyFilter) &&
+        (statusFilter === "" || doc.status === statusFilter)
     );
 }
 

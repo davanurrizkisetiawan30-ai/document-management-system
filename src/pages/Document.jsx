@@ -5,8 +5,8 @@ function Document() {
 
     const permissions = documentPermissions(currentUser.role);
     const { search, setSearch } = useDocumentSearch();
-    const { typeFilter, setTypeFilter, companyFilter, setCompanyFilter } = useDocumentFilter();
-    const filteredDocuments = filterDocuments(documents, search, typeFilter, companyFilter);
+    const { typeFilter, setTypeFilter, companyFilter, setCompanyFilter, statusFilter, setStatusFilter } = useDocumentFilter();
+    const filteredDocuments = filterDocuments(documents, search, typeFilter, companyFilter, statusFilter);
     const { currentPage, setCurrentPage, paginationDocuments, totalPages } = useDocumentPagination(filteredDocuments);
 
 
@@ -26,6 +26,11 @@ function Document() {
                         <option value="">All Company</option>
                         <option value="Company A">Company A</option>
                         <option value="Company B">Company B</option>
+                    </select>
+                    <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                        <option value="">All Status</option>
+                        <option value="">Active</option>
+                        <option value="">Inactive</option>
                     </select>
                 </div>
                 <div className="document-buttons">
