@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
 import Document from './pages/Document';
 import User from './pages/User';
+import Company from './pages/Company';
 import AuditTrail from './pages/AuditTrail';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/document" element={<Document />} />
                         <Route path="/user" element={<User />} />
+                        <Route path="/company" element={<Company />} />
                         <Route path="/audit-trail" element={<AuditTrail />} />
                     </Routes>
                 </main>
