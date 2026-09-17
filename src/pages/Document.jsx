@@ -22,6 +22,13 @@ function Document() {
                         <option value="Laporan">Laporan</option>
                         <option value="Data">Data</option>
                     </select>
+                    <select value={companyFilter} onChange={(e) => setCompanyFilter(e.target.value)}>
+                        <option value="">All Company</option>
+                        <option value="Company A">Company A</option>
+                        <option value="Company B">Company B</option>
+                    </select>
+                </div>
+                <div className="document-buttons">
                     {permissions.canUpload && (<button className="btn-upload">Upload</button>)}
                     {permissions.canEdit && (<button className="btn-edit">Edit</button>)}
                     {permissions.canDelete && (<button className="btn-delete">Delete</button>)}
