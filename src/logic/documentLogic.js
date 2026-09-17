@@ -11,45 +11,87 @@ export const documents = [
         title: "SOP Pengajuan Cuti Karyawan",
         type: "SOP",
         owner: "Budiono",
+        company: "Company A",
+        documentDate: "7-Sept-2026",
+        status: "Active",
         createdAt: "7-Sept-2026, 10.10",
-        updatedAt: "7-Sept-2026, 10.10"
+        updatedAt: "7-Sept-2026, 10.10",
+        Permissions:{
+            edit: true,
+            delete: true,
+        }
     },
     {
         number: "DOC-002",
         title: "Surat Perjanjian Kerja Karyawan",
         type: "Kontrak",
         owner: "Ahmad",
+        company: "Company A",
+        documentDate: "6-Sept-2026",
+        status: "Active",
         createdAt: "6-Sept-2026, 12.30",
-        updatedAt: "6-Sept-2026, 12.30"
+        updatedAt: "6-Sept-2026, 12.30",
+        Permissions:{
+            edit: true,
+            delete: true,
+        }
     },
     {
         number: "DOC-003",
         title: "Laporan Kehadiran Karyawan",
         type: "Laporan",
         owner: "Farez",
+        company: "Company B",
+        documentDate: "5-Sept-2026",
+        status: "Active",
         createdAt: "5-Sept-2026, 14.00",
-        updatedAt: "5-Sept-2026, 14.00"
+        updatedAt: "5-Sept-2026, 14.00",
+        Permissions:{
+            edit: true,
+            delete: true,
+        }
     },
     {
         number: "DOC-004",
         title: "Data Karyawan Perusahaan",
         type: "Data",
         owner: "Dava Nur R S",
+        company: "Company B",
+        documentDate: "4-Sept-2026",
+        status: "Active",
         createdAt: "4-Sept-2026, 10.00",
-        updatedAt: "4-Sept-2026, 10.00"
+        updatedAt: "4-Sept-2026, 10.00",
+        Permissions:{
+            edit: true,
+            delete: true,
+        }
     }
 ];
 
-export function filterDocuments(documents, search) {
+export function useDocumentFilter() {
+    const [companyFilter, setCompanyFilter] = useState("");
+    const [typeFilter, setTypeFilter] = useState("");
+    return { typeFilter, setTypeFilter, companyFilter, setCompanyFilter };
+}
+
+export function filterDocuments(documents, search, typeFilter, companyFilter) {
     return documents.filter((doc) =>
-        doc.number.toLowerCase().includes(search.toLowerCase()) ||
-        doc.title.toLowerCase().includes(search.toLowerCase()) ||
-        doc.type.toLowerCase().includes(search.toLowerCase()) ||
-        doc.owner.toLowerCase().includes(search.toLowerCase()) ||
-        doc.createdAt.toLowerCase().includes(search.toLowerCase()) ||
-        doc.updatedAt.toLowerCase().includes(search.toLowerCase())
+        (
+            doc.number.toLowerCase().includes(search.toLowerCase()) ||
+            doc.title.toLowerCase().includes(search.toLowerCase()) ||
+            doc.type.toLowerCase().includes(search.toLowerCase()) ||
+            doc.owner.toLowerCase().includes(search.toLowerCase()) ||
+            doc.company.toLowerCase().includes(search.toLowerCase()) ||
+            doc.documentDate.toLowerCase().includes(search.toLowerCase()) ||
+            doc.status.toLowerCase().includes(search.toLowerCase()) ||
+            doc.createdAt.toLowerCase().includes(search.toLowerCase()) ||
+            doc.updatedAt.toLowerCase().includes(search.toLowerCase())
+        ) && 
+        (typeFilter === "" || doc.type === typeFilter) &&
+        (companyFilter === "" || doc.company === companyFilter)
     );
 }
+
 
 export function useDocumentPagination(documents) {
     const [currentPage, setCurrentPage] = useState(1);

@@ -1,9 +1,12 @@
-import { documents, useDocumentSearch, filterDocuments, useDocumentPagination } from "../logic/documentLogic";
+import { documents, useDocumentSearch, useDocumentFilter, filterDocuments, useDocumentPagination } from "../logic/documentLogic";
+import { currentUser, documentPermissions } from "../logic/roleLogic";
 
 function Document() {
 
+    const permissions = documentPermissions(currentUser.role);
     const { search, setSearch } = useDocumentSearch();
-    const filteredDocuments = filterDocuments(documents, search);
+    const { typeFilter, setTypeFilter, companyFilter, setCompanyFilter } = useDocumentFilter();
+    const filteredDocuments = filterDocuments(documents, search, typeFilter, companyFilter);
     const { currentPage, setCurrentPage, paginationDocuments, totalPages } = useDocumentPagination(filteredDocuments);
 
 
@@ -12,9 +15,16 @@ function Document() {
             <div className="document-header">
                 <div className="document-action">
                     <input type="text" placeholder="Search Document" value={search} onChange={(e) => setSearch(e.target.value)} />
-                    <button className="btn-upload">Upload</button>
-                    <button className="btn-edit">Edit</button>
-                    <button className="btn-delete">Delete</button>
+                    <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
+                        <option value="">All Document Type</option>
+                        <option value="SOP">SOP</option>
+                        <option value="Kontrak">Kontrak</option>
+                        <option value="Laporan">Laporan</option>
+                        <option value="Data">Data</option>
+                    </select>
+                    {permissions.canUpload && (<button className="btn-upload">Upload</button>)}
+                    {permissions.canEdit && (<button className="btn-edit">Edit</button>)}
+                    {permissions.canDelete && (<button className="btn-delete">Delete</button>)}
                 </div>
             </div>
             <table className="document-table">
@@ -39,7 +49,9 @@ function Document() {
                                 <td>{doc.createdAt}</td>
                                 <td>{doc.updatedAt}</td>
                                 <td>
-                                    <button className="btn-download">Download</button>
+                                    {permissions.canEdit && doc.permissions?.edit && (<button className="btn-edit">Edit</button>)}
+                                    {permissions.canDelete && doc.permissions?.delete && (<button className="btn-delete">Delete</button>)}
+                                    {permissions.canDownload && (<button className="btn-download">Download</button>)}
                                 </td>
                             </tr>
                         ))}
