@@ -29,8 +29,8 @@ function Document() {
                     </select>
                     <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
                         <option value="">All Status</option>
-                        <option value="">Active</option>
-                        <option value="">Inactive</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
                     </select>
                 </div>
                 <div className="document-buttons">

@@ -13,7 +13,7 @@ export const documents = [
         owner: "Budiono",
         company: "Company A",
         documentDate: "7-Sept-2026",
-        status: "Active",
+        status: "Inactive",
         createdAt: "7-Sept-2026, 10.10",
         updatedAt: "7-Sept-2026, 10.10",
         Permissions:{
@@ -43,7 +43,7 @@ export const documents = [
         owner: "Farez",
         company: "Company B",
         documentDate: "5-Sept-2026",
-        status: "Active",
+        status: "Inactive",
         createdAt: "5-Sept-2026, 14.00",
         updatedAt: "5-Sept-2026, 14.00",
         Permissions:{
