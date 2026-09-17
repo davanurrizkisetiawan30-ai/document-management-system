@@ -198,7 +198,15 @@ body {
 }
 
 .document-header {
-    margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.document-buttons {
+  display: flex;
+  gap: 6px;
 }
 
 .document-action {
