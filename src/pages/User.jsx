@@ -10,8 +10,13 @@ function User() {
 
     return (
         <div className="activity">
-            <div className="document-action">
-                <input type="text" placeholder="Search User" value={search} onChange={(e) => setSearch(e.target.value)} />
+            <div className="document-header">
+                <div className="document-action">
+                    <input type="text" placeholder="Search User" value={search} onChange={(e) => setSearch(e.target.value)} />
+                </div>
+                <div className="document-buttons">
+                    <button className="btn-upload">Add User</button>
+                </div>
             </div>
             <table className="document-table">
                 <thead>
