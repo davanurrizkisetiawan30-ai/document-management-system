@@ -1,3 +1,12 @@
+import { useState } from "react";
+
+export function useUserSearch() {
+    const [search, setSearch] =  useState("");
+    return {
+        search, setSearch
+    };
+}
+
 export const users = [
     {
         name: "Dava Nur R S",
