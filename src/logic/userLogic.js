@@ -7,6 +7,16 @@ export function useUserSearch() {
     };
 }
 
+export function editUser(users, username, updateUser) {
+    return users.map((user) => user.username === username ? { ...user, ...updateUser } : user ); 
+}
+
+export function toggleUserStatus(users, username) {
+    return users.map((user) => user.username === username ? {
+        ...user, status: user.status === "Active" ? "Inactive" : "Active"
+    } : user );
+}
+
 export const users = [
     {
         name: "Dava Nur R S",

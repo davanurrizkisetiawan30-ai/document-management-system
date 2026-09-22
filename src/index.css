@@ -303,3 +303,7 @@ body {
   background-color: #016fbd ;
   color: white;
 }
+
+.selected-user {
+  background-color: #f0f5ff;
+}
