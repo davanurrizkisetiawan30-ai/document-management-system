@@ -7,6 +7,9 @@ function User() {
     const [userData, setUserData] = useState(users);
     const [selectedUser, setSelectUser] = useState(null);
     const [showEditForm, setShowEditForm] = useState(false);
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [addName, setAddName] = useState("");
+    const [addUsername, setAddUsername] = useState("");
     const [editName, setEditName] = useState("");
     const [editUsername, setEditUsername] = useState("");
     const selectedUserData = userData.find((user) => user.username === selectedUser);
@@ -22,11 +25,10 @@ function User() {
                     <input type="text" placeholder="Search User" value={search} onChange={(e) => setSearch(e.target.value)} />
                 </div>
                 <div className="document-buttons">
-                    <button className="btn-upload">Add User</button>
+                    <button className="btn-upload" onClick={() => setShowAddForm(true)}>Add User</button>
                     <button className="btn-edit" onClick={() => {
                         if (!selectedUser) return;
                         const user = userData.find((user) => user.username === selectedUser);
-                        console.log("user yg dipilih:",user)
                         setEditName(user.name);
                         setEditUsername(user.username);
                         setShowEditForm(true);
@@ -60,15 +62,50 @@ function User() {
                     ))}
                 </tbody>
             </table>
+            {showAddForm && (
+                <div className="edit-user-form">
+                    <h3>Add User</h3>
+                    <input type="text" placeholder="Name" value={addName} onChange={(e) => setAddName(e.target.value)} />
+                    <input type="text" placeholder="Username" value={addUsername} onChange={(e) => setAddUsername(e.target.value)} />
+                    <select>
+                        <option value="">Select Company</option>
+                        <option value="Company A">Company A</option>
+                        <option value="Company B">Company B</option>
+                    </select>
+                    <button className="btn-upload" onClick={() => {
+                        if (!addName || !addUsername){return;}
+                        const newUser = {
+                            name: addName,
+                            username: addUsername,
+                            companyAccess: [],
+                            role: [],
+                            status: "Active"
+                        };
+                        setUserData([...userData, newUser]);
+                        setShowAddForm(false);
+                    }}>Save</button>
+                    <button onClick={() => setShowAddForm(false)}>Cancel</button>
+                </div>
+            )}
+
             {showEditForm && (
                 <div className="edit-user-form">
                     <h3>Edit User</h3>
                     <input type="text" placeholder="Name" value={editName} onChange={(e) => setEditName(e.target.value)}/>
                     <input type="text" placeholder="Username" value={editUsername} onChange={(e) => setEditUsername(e.target.value)}/>
-                    <button className="btn-edit">Save</button>
+                    <button className="btn-edit" onClick={() => {
+                        const updateUsers = userData.map((user) => user.username === selectedUser ? {
+                            ...user,
+                            name: editName,
+                            username: editUsername
+                        } : user );
+                        setUserData(updateUsers);
+                        setShowEditForm(false);
+                    }}>Save</button>
                     <button onClick={() => setShowEditForm(false)}>Cancel</button>
                 </div>
             )}
+
         </div>
     );
 }
