@@ -1,22 +1,31 @@
 import { useState } from "react";
-import { users, useUserSearch, toggleUserStatus } from "../logic/userLogic";
+import { users, useUserSearch, filterUsers, toggleUserStatus, addUser, editUser } from "../logic/userLogic";
 
 function User() {
 
+    /*search+filter*/
     const { search, setSearch } = useUserSearch();
     const [userData, setUserData] = useState(users);
     const [selectedUser, setSelectUser] = useState(null);
+    const selectedUserData = userData.find((user) => user.username === selectedUser);
+    const filteredUsers = filterUsers(userData, search);
+
+    /*show*/
     const [showEditForm, setShowEditForm] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
+
+    /*add*/
     const [addName, setAddName] = useState("");
     const [addUsername, setAddUsername] = useState("");
+    const [addCompany, setAddCompany] = useState("");
+    const [addRole, setAddRole] = useState("");
+
+    /*edit*/
     const [editName, setEditName] = useState("");
     const [editUsername, setEditUsername] = useState("");
-    const selectedUserData = userData.find((user) => user.username === selectedUser);
-    const filteredUsers = userData.filter((user) => 
-        user.name.toLowerCase().includes(search.toLowerCase()) ||
-        user.username.toLowerCase().includes(search.toLowerCase()) 
-    );
+    const [editCompany, setEditCompany] = useState("");
+    const [editRole, setEditRole] = useState("");
+
 
     return (
         <div className="activity">
@@ -31,6 +40,8 @@ function User() {
                         const user = userData.find((user) => user.username === selectedUser);
                         setEditName(user.name);
                         setEditUsername(user.username);
+                        setEditCompany(user.companyAccess[0]);
+                        setEditRole(user.role[0]);
                         setShowEditForm(true);
                     }}>Edit User</button>
                     <button className="btn-download" onClick={() => {
@@ -67,24 +78,32 @@ function User() {
                     <h3>Add User</h3>
                     <input type="text" placeholder="Name" value={addName} onChange={(e) => setAddName(e.target.value)} />
                     <input type="text" placeholder="Username" value={addUsername} onChange={(e) => setAddUsername(e.target.value)} />
-                    <select>
+                    <select value={addCompany} onChange={(e) => setAddCompany(e.target.value)}>
                         <option value="">Select Company</option>
                         <option value="Company A">Company A</option>
                         <option value="Company B">Company B</option>
                     </select>
-                    <button className="btn-upload" onClick={() => {
-                        if (!addName || !addUsername){return;}
-                        const newUser = {
-                            name: addName,
-                            username: addUsername,
-                            companyAccess: [],
-                            role: [],
-                            status: "Active"
-                        };
-                        setUserData([...userData, newUser]);
-                        setShowAddForm(false);
-                    }}>Save</button>
-                    <button onClick={() => setShowAddForm(false)}>Cancel</button>
+                    <select value={addRole} onChange={(e) => setAddRole(e.target.value)}>
+                        <option value="">Select Role</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Staff">Staff</option>
+                        <option value="Viewer">Viewer</option>
+                    </select>
+                    <div className="form-buttons">
+                        <button className="btn-upload" onClick={() => {
+                            if (!addName || !addUsername){return;}
+                            const newUser = {
+                                name: addName,
+                                username: addUsername,
+                                companyAccess: [addCompany],
+                                role: [addRole],
+                                status: "Active"
+                            };
+                            setUserData(addUser(userData, newUser));
+                            setShowAddForm(false);
+                        }}>Save</button>
+                        <button className="btn-cancel" onClick={() => setShowAddForm(false)}>Cancel</button>
+                    </div>
                 </div>
             )}
 
@@ -93,16 +112,30 @@ function User() {
                     <h3>Edit User</h3>
                     <input type="text" placeholder="Name" value={editName} onChange={(e) => setEditName(e.target.value)}/>
                     <input type="text" placeholder="Username" value={editUsername} onChange={(e) => setEditUsername(e.target.value)}/>
-                    <button className="btn-edit" onClick={() => {
-                        const updateUsers = userData.map((user) => user.username === selectedUser ? {
-                            ...user,
-                            name: editName,
-                            username: editUsername
-                        } : user );
-                        setUserData(updateUsers);
-                        setShowEditForm(false);
-                    }}>Save</button>
-                    <button onClick={() => setShowEditForm(false)}>Cancel</button>
+                    <select value={editCompany} onChange={(e) => setEditCompany(e.target.value)}>
+                        <option value="">Select Company</option>
+                        <option value="Company A">Company A</option>
+                        <option value="Company B">Company B</option>
+                    </select>
+                    <select value={editRole} onChange={(e) => setEditRole(e.target.value)}>
+                        <option value="">Select Role</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Staff">Staff</option>
+                        <option value="Viewer">Viewer</option>
+                    </select>
+                    <div className="form-buttons">
+                        <button className="btn-edit" onClick={() => {
+                            const updateUsers = editUser(userData, selectedUser, {
+                                name: editName,
+                                username: editUsername,
+                                companyAccess: [editCompany],
+                                role: [editRole]
+                            });
+                            setUserData(updateUsers);
+                            setShowEditForm(false);
+                        }}>Save</button>
+                        <button className="btn-cancel" onClick={() => setShowEditForm(false)}>Cancel</button>
+                    </div>
                 </div>
             )}
 

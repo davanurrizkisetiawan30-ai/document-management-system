@@ -7,6 +7,17 @@ export function useUserSearch() {
     };
 }
 
+export function filterUsers(users, search) {
+    return users.filter((user) => 
+        user.name.toLowerCase().includes(search.toLowerCase()) ||
+        user.username.toLowerCase().includes(search.toLowerCase())
+    );
+}
+
+export function addUser(users, newUser) {
+    return [...user, newUser];
+}
+
 export function editUser(users, username, updateUser) {
     return users.map((user) => user.username === username ? { ...user, ...updateUser } : user ); 
 }
