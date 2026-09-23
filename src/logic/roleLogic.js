@@ -4,6 +4,11 @@ export const currentUser = {
     company: "Company A"
 };
 
+export const companyRoles = {
+    "Company A" : "Admin",
+    "Company B" : "Staff",
+};
+
 export function documentPermissions(role) {
     return {
         canUpload: role === "Admin" || role === "Staff",
