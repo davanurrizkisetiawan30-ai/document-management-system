@@ -1,13 +1,15 @@
-import { documents, useDocumentSearch, useDocumentFilter, filterDocuments, useDocumentPagination } from "../logic/documentLogic";
+import { documents, useDocumentSearch, useDocumentFilter, filterDocuments, useDocumentPagination, useDocumentUpload, useUploadForm, uploadDocument } from "../logic/documentLogic";
 import { currentUser, documentPermissions } from "../logic/roleLogic";
 
 function Document() {
-
+    
     const permissions = documentPermissions(currentUser.role);
     const { search, setSearch } = useDocumentSearch();
     const { typeFilter, setTypeFilter, companyFilter, setCompanyFilter, statusFilter, setStatusFilter } = useDocumentFilter();
     const filteredDocuments = filterDocuments(documents, search, typeFilter, companyFilter, statusFilter);
     const { currentPage, setCurrentPage, paginationDocuments, totalPages } = useDocumentPagination(filteredDocuments);
+    const { showUploadForm, setShowUploadForm} = useDocumentUpload();
+    const { formData, setFormData } = useUploadForm();
 
 
     return (
@@ -34,7 +36,7 @@ function Document() {
                     </select>
                 </div>
                 <div className="document-buttons">
-                    {permissions.canUpload && (<button className="btn-upload">Upload</button>)}
+                    {permissions.canUpload && (<button className="btn-upload" onClick={() => setShowUploadForm(true)}>Upload</button>)}
                     {permissions.canEdit && (<button className="btn-edit">Edit</button>)}
                     {permissions.canDelete && (<button className="btn-delete">Delete</button>)}
                 </div>
@@ -69,6 +71,46 @@ function Document() {
                         ))}
                 </tbody>
             </table>
+
+            {showUploadForm && (
+                <div className="upload-form">
+                    <h3>Upload Document</h3>
+                    <label>Title</label>
+                        <input type="text" placeholder="Masukkan Judul Document" value={formData.title} onChange={(e) => 
+                        setFormData({...formData,title: e.target.value})} />
+                    <label>Company</label>
+                    <select value={formData.company} onChange={(e) => 
+                        setFormData({...formData,company: e.target.value})
+                    }>
+                        <option value="">Pilih Company</option>
+                        <option value="Company A">Company A</option>
+                        <option value="Company B">Company B</option>
+                    </select>
+                    <label>Document Type</label>
+                    <select value={formData.type} onChange={(e) => 
+                        setFormData({...formData,type: e.target.value})
+                    }>
+                        <option value="">Pilih Document Type</option>
+                        <option value="SOP">SOP</option>
+                        <option value="Kontrak">Kontrak</option>
+                        <option value="Laporan">Laporan</option>
+                        <option value="Data">Data</option>
+                    </select>
+                    <label>Description</label>
+                    <textarea placeholder="Masukkan deskripsi dokumen" value={formData.description} onChange={(e) => 
+                        setFormData({...formData,description: e.target.value})}></textarea>
+                    <label>Document Date</label>
+                    <input type="date" value={formData.date} onChange={(e) => 
+                        setFormData({...formData,date: e.target.value})} />
+                    <label>Document File</label>
+                    <input type="file" onChange={(e) => setFormData({...formData,file: e.target.files[0]})}/>
+                    <div className="form-buttons">
+                        <button className="btn-upload">Upload</button>
+                        <button className="btn-cancel" onClick={() => setShowUploadForm(false)}>Cancel</button>
+                    </div>
+                </div>
+            )}
+
             <div className="pagination">
                 {Array.from({ length: totalPages }, (_, index) => (
                     <button key={index} className={currentPage === index + 1 ? "active" : ""} onClick={() => setCurrentPage(index + 1)}>

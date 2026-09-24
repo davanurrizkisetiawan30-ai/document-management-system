@@ -5,6 +5,11 @@ export function useDocumentSearch() {
     return { search, setSearch };
 }
 
+export function generatorDocumentNumber(documents, prefix = "DOC") {
+    const nextNumber = documents.length + 1;
+    return `${prefix}-${String(nextNumber).padStart(3, "0")}`;
+}
+
 export const documents = [
     {
         number: "DOC-001",
@@ -103,4 +108,41 @@ export function useDocumentPagination(documents) {
     const paginationDocuments = documents.slice(startIndex, startIndex + itemsPerPage);
     const totalPages = Math.ceil(documents.length / itemsPerPage);
     return { currentPage, setCurrentPage, paginationDocuments, totalPages };
+}
+
+export function useDocumentUpload() {
+    const [showUploadForm, setShowUploadForm] = useState(false);
+    return {
+        showUploadForm,
+        setShowUploadForm
+    };
+}
+
+export function useUploadForm() {
+    const [formData, setFormData] = useState({
+        title: "",
+        company: "",
+        type: "",
+        description: "",
+        documentDate: "",
+        file: null
+    });
+    return {
+        formData,
+        setFormData
+    };
+}
+
+export function uploadDocument(formData, documents) {
+    const documentNumber = generatorDocumentNumber(documents);
+    const newDocument = {
+        number: documentNumber,
+        title: formData.title,
+        company: formData.company,
+        type: formData.type,
+        description: formData.description,
+        documentDate: formData.documentDate,
+        file: formData.file
+    };
+    return [...documents, newDocument];
 }
