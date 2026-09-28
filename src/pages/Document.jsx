@@ -1,12 +1,13 @@
-import { documents, useDocumentSearch, useDocumentFilter, filterDocuments, useDocumentPagination, useDocumentUpload, useUploadForm, uploadDocument } from "../logic/documentLogic";
+import { documents, useDocumentSearch, useDocumentFilter, filterDocuments, useDocumentPagination, useDocumentUpload, useUploadForm, uploadDocument, useDocumentData } from "../logic/documentLogic";
 import { currentUser, documentPermissions } from "../logic/roleLogic";
 
 function Document() {
     
     const permissions = documentPermissions(currentUser.role);
     const { search, setSearch } = useDocumentSearch();
+    const { documentData, setDocumentData } = useDocumentData();
     const { typeFilter, setTypeFilter, companyFilter, setCompanyFilter, statusFilter, setStatusFilter } = useDocumentFilter();
-    const filteredDocuments = filterDocuments(documents, search, typeFilter, companyFilter, statusFilter);
+    const filteredDocuments = filterDocuments(documentData, search, typeFilter, companyFilter, statusFilter);
     const { currentPage, setCurrentPage, paginationDocuments, totalPages } = useDocumentPagination(filteredDocuments);
     const { showUploadForm, setShowUploadForm} = useDocumentUpload();
     const { formData, setFormData } = useUploadForm();
@@ -105,7 +106,11 @@ function Document() {
                     <label>Document File</label>
                     <input type="file" onChange={(e) => setFormData({...formData,file: e.target.files[0]})}/>
                     <div className="form-buttons">
-                        <button className="btn-upload">Upload</button>
+                        <button className="btn-upload" onClick={() => {
+                            const newDocuments = uploadDocument(formData, documentData, currentUser);
+                            setDocumentData(newDocuments);
+                            setShowUploadForm(false);
+                        }}>Upload</button>
                         <button className="btn-cancel" onClick={() => setShowUploadForm(false)}>Cancel</button>
                     </div>
                 </div>

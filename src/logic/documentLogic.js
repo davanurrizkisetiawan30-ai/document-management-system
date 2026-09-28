@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { currentUser } from "./roleLogic";
 
 export function useDocumentSearch() {
     const [search, setSearch] = useState("");
@@ -133,8 +134,9 @@ export function useUploadForm() {
     };
 }
 
-export function uploadDocument(formData, documents) {
+export function uploadDocument(formData, documents, currentUser) {
     const documentNumber = generatorDocumentNumber(documents);
+    const now = new Date().toLocaleString("id-ID");
     const newDocument = {
         number: documentNumber,
         title: formData.title,
@@ -142,7 +144,18 @@ export function uploadDocument(formData, documents) {
         type: formData.type,
         description: formData.description,
         documentDate: formData.documentDate,
-        file: formData.file
+        file: formData.file,
+        owner: currentUser.name,
+        createdAt: now,
+        updatedAt: now
     };
     return [...documents, newDocument];
+}
+
+export function useDocumentData() {
+    const[documentData, setDocumentData] = useState(documents);
+    return {
+        documentData,
+        setDocumentData
+    };
 }
