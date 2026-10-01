@@ -10,6 +10,7 @@ import {
     useDocumentData, 
     validateuploadForm, 
     editDocument } from "../logic/documentLogic";
+import { useState } from "react";
 import { currentUser, documentPermissions } from "../logic/roleLogic";
 
 function Document() {
@@ -24,6 +25,7 @@ function Document() {
     const { formData, setFormData, resetForm } = useUploadForm();
     const [ editMode, setEditMode ] = useState(false);
     const [ editingDocument, setEditingDocument ] = useState(null);
+    const [ selectedDocument, setSelectedDocument ] = useState(null);
 
 
     return (
@@ -51,7 +53,14 @@ function Document() {
                 </div>
                 <div className="document-buttons">
                     {permissions.canUpload && (<button className="btn-upload" onClick={() => setShowUploadForm(true)}>Upload</button>)}
-                    {permissions.canEdit && (<button className="btn-edit">Edit</button>)}
+                    {permissions.canEdit && (<button className="btn-edit" onClick={() => {
+                        if (!selectedDocument) {
+                            alert("Pilih dokumen terlebih dahulu");
+                            return;
+                        }
+                        setEditMode(true);
+                        setEditingDocument(selectedDocument);
+                    }}>Edit</button>)}
                     {permissions.canDelete && (<button className="btn-delete">Delete</button>)}
                 </div>
             </div>
@@ -69,7 +78,7 @@ function Document() {
                 </thead>
                 <tbody>
                         {paginationDocuments.map((doc) => (
-                            <tr key={doc.number}>
+                            <tr key={doc.number} onClick={() => setSelectedDocument(doc)} className={selectedDocument === doc ? "selected-row" : ""}>
                                 <td>{doc.number}</td>
                                 <td>{doc.title}</td>
                                 <td>{doc.type}</td>
@@ -77,11 +86,6 @@ function Document() {
                                 <td>{doc.createdAt}</td>
                                 <td>{doc.updatedAt}</td>
                                 <td>
-                                    {permissions.canEdit && doc.permissions?.edit && (<button className="btn-edit" onClick={() => {
-                                        setEditMode(true);
-                                        setEditingDocument(doc);
-                                    }}>Edit</button>)}
-                                    {permissions.canDelete && doc.permissions?.delete && (<button className="btn-delete">Delete</button>)}
                                     {permissions.canDownload && (<button className="btn-download">Download</button>)}
                                 </td>
                             </tr>
@@ -134,6 +138,31 @@ function Document() {
                             setShowUploadForm(false);
                         }}>Upload</button>
                         <button className="btn-cancel" onClick={() => {resetForm(); setShowUploadForm(false);}}>Cancel</button>
+                    </div>
+                </div>
+            )}
+
+            {editMode && editingDocument && (
+                <div className="upload-form">
+                    <h3>Edit Document</h3>
+                    <label>Title</label>
+                    <input type="text" value={editDocument.title} onChange={(e) => setEditDocument({...editDocument, title: e.target.value})} />
+                    <label>Description</label>
+                    <textarea value={editDocument.description || ""} onChange={(e) => setEditDocument({...editDocument, description: e.target.value})}></textarea>
+                    <div className="form-buttons">
+                        <button className="btn-edit" onClick={() => {
+                            const updatedDocuments = editDocument(documentData, editingDocument.number,{
+                                title: editDocument.title,
+                                description: editDocument.description
+                            });
+                            setDocumentData(updatedDocuments);
+                            setEditMode(false);
+                            setEditingDocument(null);
+                        }}>Save</button>
+                        <button className="btn-cancel" onClick={() => {
+                            setEditMode(false);
+                            setEditingDocument(null);
+                        }}>Cancel</button>
                     </div>
                 </div>
             )}
