@@ -128,9 +128,22 @@ export function useUploadForm() {
         documentDate: "",
         file: null
     });
+
+    function resetForm() {
+        setFormData({
+            title: "",
+            company: "",
+            type: "",
+            description: "",
+            documentDate: "",
+            file: null
+        });
+    }
+
     return {
         formData,
-        setFormData
+        setFormData,
+        resetForm
     };
 }
 
@@ -150,6 +163,37 @@ export function uploadDocument(formData, documents, currentUser) {
         updatedAt: now
     };
     return [...documents, newDocument];
+}
+
+export function editDocument(documents, documentNumber, updatedData) {
+    return documents.map((doc) => 
+    doc.number === documentNumber 
+        ? {
+            ...doc,
+            ...updatedData,
+            updatedAt: new Date().toLocaleString("id-ID")
+        }
+        : doc   
+    );
+}
+
+export function validateuploadForm(formData) {
+    if (!formData.title.trim()) {
+        return "Title wajib diisi";
+    }
+    if (!formData.company) {
+        return "Company wajib dipilih";
+    }
+    if (!formData.type.trim()) {
+        return "Document Type wajib dipilih";
+    }
+    if (!formData.documentDate) {
+        return "Document Date wajib diisi";
+    }
+    if (!formData.file) {
+        return "Document File wajib diupload";
+    }
+    return "";
 }
 
 export function useDocumentData() {

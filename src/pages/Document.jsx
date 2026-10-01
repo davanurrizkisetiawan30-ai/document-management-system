@@ -1,4 +1,15 @@
-import { documents, useDocumentSearch, useDocumentFilter, filterDocuments, useDocumentPagination, useDocumentUpload, useUploadForm, uploadDocument, useDocumentData } from "../logic/documentLogic";
+import { 
+    documents, 
+    useDocumentSearch, 
+    useDocumentFilter, 
+    filterDocuments, 
+    useDocumentPagination, 
+    useDocumentUpload, 
+    useUploadForm, 
+    uploadDocument, 
+    useDocumentData, 
+    validateuploadForm, 
+    editDocument } from "../logic/documentLogic";
 import { currentUser, documentPermissions } from "../logic/roleLogic";
 
 function Document() {
@@ -10,7 +21,9 @@ function Document() {
     const filteredDocuments = filterDocuments(documentData, search, typeFilter, companyFilter, statusFilter);
     const { currentPage, setCurrentPage, paginationDocuments, totalPages } = useDocumentPagination(filteredDocuments);
     const { showUploadForm, setShowUploadForm} = useDocumentUpload();
-    const { formData, setFormData } = useUploadForm();
+    const { formData, setFormData, resetForm } = useUploadForm();
+    const [ editMode, setEditMode ] = useState(false);
+    const [ editingDocument, setEditingDocument ] = useState(null);
 
 
     return (
@@ -64,7 +77,10 @@ function Document() {
                                 <td>{doc.createdAt}</td>
                                 <td>{doc.updatedAt}</td>
                                 <td>
-                                    {permissions.canEdit && doc.permissions?.edit && (<button className="btn-edit">Edit</button>)}
+                                    {permissions.canEdit && doc.permissions?.edit && (<button className="btn-edit" onClick={() => {
+                                        setEditMode(true);
+                                        setEditingDocument(doc);
+                                    }}>Edit</button>)}
                                     {permissions.canDelete && doc.permissions?.delete && (<button className="btn-delete">Delete</button>)}
                                     {permissions.canDownload && (<button className="btn-download">Download</button>)}
                                 </td>
@@ -101,17 +117,23 @@ function Document() {
                     <textarea placeholder="Masukkan deskripsi dokumen" value={formData.description} onChange={(e) => 
                         setFormData({...formData,description: e.target.value})}></textarea>
                     <label>Document Date</label>
-                    <input type="date" value={formData.date} onChange={(e) => 
-                        setFormData({...formData,date: e.target.value})} />
+                    <input type="date" value={formData.documentDate} onChange={(e) => 
+                        setFormData({...formData,documentDate: e.target.value})} />
                     <label>Document File</label>
                     <input type="file" onChange={(e) => setFormData({...formData,file: e.target.files[0]})}/>
                     <div className="form-buttons">
                         <button className="btn-upload" onClick={() => {
+                            const error = validateuploadForm(formData);
+                            if (error) {
+                                alert(error);
+                                return;
+                            }
                             const newDocuments = uploadDocument(formData, documentData, currentUser);
                             setDocumentData(newDocuments);
+                            resetForm();
                             setShowUploadForm(false);
                         }}>Upload</button>
-                        <button className="btn-cancel" onClick={() => setShowUploadForm(false)}>Cancel</button>
+                        <button className="btn-cancel" onClick={() => {resetForm(); setShowUploadForm(false);}}>Cancel</button>
                     </div>
                 </div>
             )}
