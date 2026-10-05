@@ -148,7 +148,7 @@ function Document() {
                 <div className="upload-form">
                     <h3>Edit Document</h3>
                     <label>Title</label>
-                    <input type="text" value={editDocument.title} onChange={(e) => setEditDocument({...editDocument, title: e.target.value})} />
+                    <input type="text" value={editingDocument.title} onChange={(e) => setEditingDocument({...editingDocument, title: e.target.value})} />
                     <label>Document Type</label>
                     <select name="documentType" id="documentType" value={editingDocument.type} onChange={(e) => setEditingDocument({...editingDocument, type: e.target.value})}>
                         <option value="">Pilih Document Type</option>
@@ -158,13 +158,13 @@ function Document() {
                         <option value="Data">Data</option>
                     </select>
                     <label>Description</label>
-                    <textarea value={editDocument.description || ""} onChange={(e) => setEditDocument({...editDocument, description: e.target.value})}></textarea>
+                    <textarea value={editingDocument.description || ""} onChange={(e) => setEditingDocument({...editingDocument, description: e.target.value})}></textarea>
                     <div className="form-buttons">
                         <button className="btn-edit" onClick={() => {
                             const updatedDocuments = editDocument(documentData, editingDocument.number,{
-                                title: editDocument.title,
+                                title: editingDocument.title,
                                 type: editingDocument.type,
-                                description: editDocument.description
+                                description: editingDocument.description
                             });
                             setDocumentData(updatedDocuments);
                             setEditMode(false);
