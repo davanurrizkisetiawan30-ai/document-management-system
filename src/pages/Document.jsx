@@ -9,7 +9,8 @@ import {
     uploadDocument, 
     useDocumentData, 
     validateuploadForm, 
-    editDocument } from "../logic/documentLogic";
+    editDocument,
+    deleteDocument } from "../logic/documentLogic";
 import { useState } from "react";
 import { currentUser, documentPermissions } from "../logic/roleLogic";
 
@@ -51,6 +52,7 @@ function Document() {
                         <option value="Inactive">Inactive</option>
                     </select>
                 </div>
+
                 <div className="document-buttons">
                     {permissions.canUpload && (<button className="btn-upload" onClick={() => setShowUploadForm(true)}>Upload</button>)}
                     {permissions.canEdit && (<button className="btn-edit" onClick={() => {
@@ -61,8 +63,21 @@ function Document() {
                         setEditMode(true);
                         setEditingDocument(selectedDocument);
                     }}>Edit</button>)}
-                    {permissions.canDelete && (<button className="btn-delete">Delete</button>)}
+                    {permissions.canDelete && (<button className="btn-delete" onClick={() => {
+                        if (!selectedDocument) {
+                            alert("Pilih dokumen terlebih dahulu");
+                            return;
+                        }
+                        const confirmDelete = window.confirm(`Yakin ingin menghapus ${selectedDocument.number}?`);
+                        if (!confirmDelete) {
+                            return;
+                        }
+                        const updatedDocuments = deleteDocument(documentData, selectedDocument.number);
+                        setDocumentData(updatedDocuments);
+                        setSelectedDocument(null);
+                    }}>Delete</button>)}
                 </div>
+
             </div>
             <table className="document-table">
                 <thead>
