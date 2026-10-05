@@ -40,6 +40,7 @@ function Home() {
                             <th>Document Number</th>
                             <th>Title</th>
                             <th>Document Type</th>
+                            <th>Description</th>
                             <th>Owner/Created By</th>
                             <th>Created At</th>
                             <th>Update At</th>
@@ -51,6 +52,7 @@ function Home() {
                                 <td>{doc.number}</td>
                                 <td>{doc.title}</td>
                                 <td>{doc.type}</td>
+                                <td>{doc.description}</td>
                                 <td>{doc.owner}</td>
                                 <td>{doc.createdAt}</td>
                                 <td>{doc.updatedAt}</td>

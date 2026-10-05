@@ -177,6 +177,10 @@ export function editDocument(documents, documentNumber, updatedData) {
     );
 }
 
+export function deleteDocument(documents, documentNumber) {
+    return documents.filter((doc) => doc.number !== documentNumber);
+}
+
 export function validateuploadForm(formData) {
     if (!formData.title.trim()) {
         return "Title wajib diisi";
