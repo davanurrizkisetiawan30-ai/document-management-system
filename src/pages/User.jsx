@@ -91,7 +91,7 @@ function User() {
                     </select>
                     <div className="form-buttons">
                         <button className="btn-upload" onClick={() => {
-                            if (!addName || !addUsername){return;}
+                            if (!addName || !addUsername || !addCompany || !addRole) return;
                             const newUser = {
                                 name: addName,
                                 username: addUsername,
@@ -100,6 +100,10 @@ function User() {
                                 status: "Active"
                             };
                             setUserData(addUser(userData, newUser));
+                            setAddName("");
+                            setAddUsername("");
+                            setAddCompany("");
+                            setAddRole("");
                             setShowAddForm(false);
                         }}>Save</button>
                         <button className="btn-cancel" onClick={() => setShowAddForm(false)}>Cancel</button>
