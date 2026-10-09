@@ -73,26 +73,38 @@ function User() {
                     ))}
                 </tbody>
             </table>
+
+            {/* Add User Form */}
             {showAddForm && (
                 <div className="edit-user-form">
                     <h3>Add User</h3>
                     <input type="text" placeholder="Name" value={addName} onChange={(e) => setAddName(e.target.value)} />
                     <input type="text" placeholder="Username" value={addUsername} onChange={(e) => setAddUsername(e.target.value)} />
+
                     <select value={addCompany} onChange={(e) => setAddCompany(e.target.value)}>
                         <option value="">Select Company</option>
                         <option value="Company A">Company A</option>
                         <option value="Company B">Company B</option>
                     </select>
+
                     <select value={addRole} onChange={(e) => setAddRole(e.target.value)}>
                         <option value="">Select Role</option>
                         <option value="Admin">Admin</option>
                         <option value="Staff">Staff</option>
                         <option value="Viewer">Viewer</option>
                     </select>
+
                     <div className="form-buttons">
                         <button className="btn-upload" onClick={() => {
                             if (!addName || !addUsername || !addCompany || !addRole) {
                                 alert("Semua data user harus diisi");
+                                return;
+                            }
+                            const usernameExist = userData.some(
+                                (user) => user.username.toLowerCase() === addUsername.trim().toLowerCase()
+                            );
+                            if (usernameExist) {
+                                alert("Username sudah digunakan, silakan gunakan username lain.");
                                 return;
                             }
                             const newUser = {
@@ -109,11 +121,13 @@ function User() {
                             setAddRole("");
                             setShowAddForm(false);
                         }}>Save</button>
+
                         <button className="btn-cancel" onClick={() => setShowAddForm(false)}>Cancel</button>
                     </div>
                 </div>
             )}
 
+            {/*edit form*/}
             {showEditForm && (
                 <div className="edit-user-form">
                     <h3>Edit User</h3>
@@ -132,6 +146,17 @@ function User() {
                     </select>
                     <div className="form-buttons">
                         <button className="btn-edit" onClick={() => {
+                            if(!editName || !editUsername || !editCompany || !editRole) {
+                                alert("Semua data user wajib diisi");
+                                return;
+                            }
+                            const usernameExist = userData.some(
+                                (user) => user.username.toLowerCase() === editUsername.trim().toLowerCase() && user.username !== selectedUser
+                            );
+                            if (usernameExist) {
+                                alert("Username sudah digunakan");
+                                return;
+                            }
                             const updateUsers = editUser(userData, selectedUser, {
                                 name: editName,
                                 username: editUsername,
