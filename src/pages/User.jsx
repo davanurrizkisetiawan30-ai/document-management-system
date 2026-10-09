@@ -91,7 +91,10 @@ function User() {
                     </select>
                     <div className="form-buttons">
                         <button className="btn-upload" onClick={() => {
-                            if (!addName || !addUsername || !addCompany || !addRole) return;
+                            if (!addName || !addUsername || !addCompany || !addRole) {
+                                alert("Semua data user harus diisi");
+                                return;
+                            }
                             const newUser = {
                                 name: addName,
                                 username: addUsername,
