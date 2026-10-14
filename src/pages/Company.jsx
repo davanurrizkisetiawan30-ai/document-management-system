@@ -6,6 +6,7 @@ function Company() {
     const [showAddForm, setShowAddForm] = useState(false);
     const [companyName, setCompanyName] = useState("");
     const [companyData, setCompanyData] = useState(initialCompanies);
+    const [selectedCompany, setSelectedCompany] = useState(null);
 
     function handleAddCompany() {
         const name = companyName.trim();
@@ -30,8 +31,9 @@ function Company() {
     return (
         <div>
             <h1>Company</h1>
-            <button onClick={() => setShowAddForm(true)}>Add Company</button>
 
+            {/* add form */}
+            <button onClick={() => setShowAddForm(true)}>Add Company</button>
             {showAddForm && (
                 <div>
                     <h3>Add Company</h3>
@@ -40,6 +42,9 @@ function Company() {
                     <button onClick={() => setShowAddForm(false)}>Cancel</button>
                 </div>
             )}
+
+            <button>Edit Company</button>
+
 
             <table>
                 <thead>
@@ -50,7 +55,7 @@ function Company() {
                 </thead>
                 <tbody>
                     {companyData.map((company, index) => (
-                        <tr key={index}>
+                        <tr key={index} onClick={() => setSelectedCompany(company)} style={{ backgroundColor: selectedCompany?.name === company.name ? "#dbeafe" : "white", cursor: "pointer" }}>
                             <td>{company.name}</td>
                             <td>{company.status}</td>
                         </tr>
