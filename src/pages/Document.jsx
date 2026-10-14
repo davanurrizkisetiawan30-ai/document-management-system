@@ -52,14 +52,6 @@ function Document() {
                         <option value="Inactive">Inactive</option>
                     </select>
                 </div>
-
-                <div className="document-selection">
-                    {selectedDocument ? (
-                        <span>Dokumen Terpilih : {selectedDocument.number} — {selectedDocument.title}</span>
-                    ) : (
-                        <span>Belum ada dokumen yang dipilih</span>
-                    )}
-                </div>
                 <div className="document-buttons">
                     {permissions.canUpload && (<button className="btn-upload" onClick={() => setShowUploadForm(true)}>Upload</button>)}
                     {permissions.canEdit && (<button className="btn-edit" onClick={() => {

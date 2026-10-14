@@ -300,6 +300,14 @@ body {
   font-size: 13px;
 }
 
+.document-table tbody tr {
+  cursor: pointer;
+}
+
+.document-table tbody tr.selected-row {
+  background-color: #dbeafe;
+}
+
 .btn-upload {
   background-color: #7ed957;
   color: black;
