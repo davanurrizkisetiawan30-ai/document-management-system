@@ -1,3 +1,9 @@
+export function filterCompanies(companies, search) {
+    return companies.filter((company) =>
+        company.name.toLowerCase().includes(search.toLowerCase())
+    );
+}
+
 export const companies = [
     {
         name: "Company A",

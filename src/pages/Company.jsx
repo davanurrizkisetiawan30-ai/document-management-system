@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { companies as initialCompanies, addCompany, editCompany, toggleCompanyStatus } from "../logic/companyLogic";
+import { companies as initialCompanies, addCompany, editCompany, toggleCompanyStatus, filterCompanies } from "../logic/companyLogic";
 
 function Company() {
 
@@ -9,6 +9,8 @@ function Company() {
     const [selectedCompany, setSelectedCompany] = useState(null);
     const [editMode, setEditMode] = useState(false);
     const [editingCompany, setEditingCompany] = useState(null);
+    const [search, setSearch] = useState("");
+    const filteredCompanies = filterCompanies(companyData, search);
 
     function handleAddCompany() {
         const name = companyName.trim();
@@ -46,14 +48,17 @@ function Company() {
             name: name
         };
         setCompanyData(companyData.map((company) => company.name === selectedCompany.name ? { ...company, name } : company));
-        selectedCompany({...selectedCompany, name});
+        setSelectedCompany({...selectedCompany, name});
         setEditMode(false);
         setEditingCompany(null);
     }
 
+
     return (
         <div className="company-container">
             <div className="company-header">
+
+                <input type="text" className="search" placeholder="Search Company" value={search} onChange={(e) => setSearch(e.target.value)} />
 
                 <div className="company-buttons">
                     {/* add form */}
@@ -106,7 +111,7 @@ function Company() {
                     </tr>
                 </thead>
                 <tbody>
-                    {companyData.map((company, index) => (
+                    {filteredCompanies.map((company, index) => (
                         <tr key={index} onClick={() => setSelectedCompany(company)} className={selectedCompany?.name === company.name ? "selected-row" : ""}>
                             <td>{company.name}</td>
                             <td>{company.status}</td>
