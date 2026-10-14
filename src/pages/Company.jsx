@@ -52,50 +52,53 @@ function Company() {
     }
 
     return (
-        <div>
-            <h1>Company</h1>
+        <div className="company-container">
+            <div className="company-header">
 
-            {/* add form */}
-            <button onClick={() => setShowAddForm(true)}>Add Company</button>
-            {showAddForm && (
-                <div>
-                    <h3>Add Company</h3>
-                    <input type="text" placeholder="Company Name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
-                    <button onClick={handleAddCompany}>Save</button>
-                    <button onClick={() => setShowAddForm(false)}>Cancel</button>
+                <div className="company-buttons">
+                    {/* add form */}
+                    <button className="btn-upload" onClick={() => setShowAddForm(true)}>Add Company</button>
+                    {showAddForm && (
+                        <div>
+                            <h3>Add Company</h3>
+                            <input type="text" placeholder="Company Name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+                            <button onClick={handleAddCompany}>Save</button>
+                            <button onClick={() => setShowAddForm(false)}>Cancel</button>
+                        </div>
+                    )}
+
+                    {/* edit form */}
+                    <button className="btn-edit" onClick={() => {
+                        if (!selectedCompany) {
+                            alert("Pilih company terlebih dahulu");
+                            return;
+                        }
+                        setEditingCompany({ ...selectedCompany });
+                        setEditMode(true);
+                    }}>Edit Company</button>
+                    {editMode && (
+                        <div className="company-form">
+                            <h3>Edit Company</h3>
+                            <label>Company Name</label>
+                            <input type="text" value={editingCompany.name} onChange={(e) => setEditingCompany({ ...editingCompany, name: e.target.value })} />
+                            <div className="form-buttons">
+                            <button onClick={handleEditCompany}>Save</button>
+                                <button onClick={() => { setEditMode(false); setEditingCompany(null); }}>Cancel</button>
+                            </div>
+                        </div>
+                    )}
+
+                    <button className="btn-download" onClick={() => {
+                        if (!selectedCompany) {
+                            alert("Pilih company terlebih dahulu");
+                            return;
+                        }
+                        setCompanyData(toggleCompanyStatus(companyData, selectedCompany.name));
+                        setSelectedCompany({...selectedCompany, status: selectedCompany.status === "Active" ? "Inactive" : "Active"});
+                    }}>Active / Deactive</button>
                 </div>
-            )}
-
-            <button onClick={() => {
-                if (!selectedCompany) {
-                    alert("Pilih company terlebih dahulu");
-                    return;
-                }
-                setEditingCompany({ ...selectedCompany });
-                setEditMode(true);
-            }}>Edit Company</button>
-            {editMode && (
-                <div className="company-form">
-                    <h3>Edit Company</h3>
-                    <label>Company Name</label>
-                    <input type="text" value={editingCompany.name} onChange={(e) => setEditingCompany({ ...editingCompany, name: e.target.value })} />
-                    <div className="form-buttons">
-                    <button onClick={handleEditCompany}>Save</button>
-                        <button onClick={() => { setEditMode(false); setEditingCompany(null); }}>Cancel</button>
-                    </div>
-                </div>
-            )}
-
-            <button onClick={() => {
-                if (!selectedCompany) {
-                    alert("Pilih company terlebih dahulu");
-                    return;
-                }
-                setCompanyData(toggleCompanyStatus(companyData, selectedCompany.name));
-                setSelectedCompany({...selectedCompany, status: selectedCompany.status === "Active" ? "Inactive" : "Active"});
-            }}>Active / Deactive</button>
-            
-            <table>
+            </div>
+            <table className="company-table">
                 <thead>
                     <tr>
                         <th>Company</th>
@@ -104,7 +107,7 @@ function Company() {
                 </thead>
                 <tbody>
                     {companyData.map((company, index) => (
-                        <tr key={index} onClick={() => setSelectedCompany(company)} style={{ backgroundColor: selectedCompany?.name === company.name ? "#dbeafe" : "white", cursor: "pointer" }}>
+                        <tr key={index} onClick={() => setSelectedCompany(company)} className={selectedCompany?.name === company.name ? "selected-row" : ""}>
                             <td>{company.name}</td>
                             <td>{company.status}</td>
                         </tr>
