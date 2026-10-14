@@ -15,7 +15,7 @@ export function filterUsers(users, search) {
 }
 
 export function addUser(users, newUser) {
-    return [...user, newUser];
+    return [...users, newUser];
 }
 
 export function editUser(users, username, updateUser) {

@@ -120,6 +120,7 @@ function User() {
                             setAddCompany("");
                             setAddRole("");
                             setShowAddForm(false);
+                            alert("User added successfully!");
                         }}>Save</button>
 
                         <button className="btn-cancel" onClick={() => setShowAddForm(false)}>Cancel</button>
