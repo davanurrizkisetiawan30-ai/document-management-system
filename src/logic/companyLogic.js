@@ -12,3 +12,7 @@ export const companies = [
         status: "Inactive"
     }
 ];
+
+export function addCompany(companies, newCompany) {
+    return [...companies, newCompany];
+}
