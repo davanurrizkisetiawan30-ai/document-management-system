@@ -16,3 +16,9 @@ export const companies = [
 export function addCompany(companies, newCompany) {
     return [...companies, newCompany];
 }
+
+export function editCompany(companies, oldName, updatedCompany) {
+    return companies.map((company) => 
+    company.name === oldName ? { ...company, ...updatedCompany } : company
+    );
+}
