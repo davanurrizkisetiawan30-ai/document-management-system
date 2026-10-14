@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { companies as initialCompanies, addCompany, editCompany } from "../logic/companyLogic";
+import { companies as initialCompanies, addCompany, editCompany, toggleCompanyStatus } from "../logic/companyLogic";
 
 function Company() {
 
@@ -86,6 +86,15 @@ function Company() {
                 </div>
             )}
 
+            <button onClick={() => {
+                if (!selectedCompany) {
+                    alert("Pilih company terlebih dahulu");
+                    return;
+                }
+                setCompanyData(toggleCompanyStatus(companyData, selectedCompany.name));
+                setSelectedCompany({...selectedCompany, status: selectedCompany.status === "Active" ? "Inactive" : "Active"});
+            }}>Active / Deactive</button>
+            
             <table>
                 <thead>
                     <tr>

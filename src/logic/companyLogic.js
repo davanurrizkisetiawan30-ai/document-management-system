@@ -22,3 +22,9 @@ export function editCompany(companies, oldName, updatedCompany) {
     company.name === oldName ? { ...company, ...updatedCompany } : company
     );
 }
+
+export function toggleCompanyStatus(companies, name) {
+    return companies.map((company) => 
+        company.name === name ? { ...company, status: company.status === "Active" ? "Inactive" : "Active" } : company
+    );
+}   
