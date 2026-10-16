@@ -20,11 +20,13 @@ function Login() {
                 <label>Password</label>
                 <input type="password" placeholder="Masukkan Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 <button onClick={() => {
-                    const success = loginUser(username, password);
-                    if (success) {
-                        navigate("/");
+                    const user = loginUser(username, password);
+                    if (user) {
+                        navigate("/select-company", {
+                            state: { user }
+                        });
                     } else {
-                        setError("Username atau password salah");
+                        setError("Username atau Password salah");
                     }}}>Login</button>
                     {error && <p>{error}</p>}
             </div>
