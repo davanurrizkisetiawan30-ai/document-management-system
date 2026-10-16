@@ -1,78 +1,55 @@
 import { useState } from "react";
-import { companies as initialCompanies, addCompany, editCompany, toggleCompanyStatus, filterCompanies } from "../logic/companyLogic";
+import { companies as initialCompanies, addCompany, editCompany, deleteCompany, toggleCompanyStatus, filterCompanies } from "../logic/companyLogic";
 
 function Company() {
 
+    {/** Add Company Form */}
     const [showAddForm, setShowAddForm] = useState(false);
     const [companyName, setCompanyName] = useState("");
     const [companyData, setCompanyData] = useState(initialCompanies);
+    {/** Edit Company Form */}
     const [selectedCompany, setSelectedCompany] = useState(null);
     const [editMode, setEditMode] = useState(false);
     const [editingCompany, setEditingCompany] = useState(null);
+    {/** Search Company */}
     const [search, setSearch] = useState("");
     const filteredCompanies = filterCompanies(companyData, search);
 
+    {/** Add Company */}
     function handleAddCompany() {
-        const name = companyName.trim();
-        if (!name) {
-            alert("Nama Company Wajib Diisi");
+        const result = addCompany(companyData, companyName);
+        if (result.error) {
+            alert(result.error);
             return;
         }
-        const nameExist = companyData.some((company) => company.name.toLowerCase() === name.toLowerCase());
-        if (nameExist) {
-            alert("Nama Company sudah digunakan");
-            return;
-        }
-        const newCompany = {
-            name: name,
-            status: "Active"
-        };
-        setCompanyData([...companyData, newCompany]);
+        setCompanyData(result.companies);
         setCompanyName("");
         setShowAddForm(false);
     }
 
+    {/** Edit Company */}
     function handleEditCompany() {
-        const name = editingCompany.name.trim();
-        if (!name) {
-            alert("Nama Company Wajib Diisi");
+        const result = editCompany(companyData, selectedCompany.name, editingCompany.name);
+        if (result.error) {
+            alert(result.error);
             return;
         }
-        const nameExist = companyData.some((company) => company.name.toLowerCase() === name.toLowerCase() && company.name !== selectedCompany.name);
-        if (nameExist) {
-            alert("Nama Company sudah digunakan");
-            return;
-        }
-        const updatedCompany = {
-            ...editingCompany,
-            name: name
-        };
-        setCompanyData(companyData.map((company) => company.name === selectedCompany.name ? { ...company, name } : company));
-        setSelectedCompany({...selectedCompany, name});
+        setCompanyData(result.companies);
+        setSelectedCompany({...selectedCompany, name: editingCompany.name.trim()});
         setEditMode(false);
         setEditingCompany(null);
     }
 
 
     return (
-        <div className="company-container">
-            <div className="company-header">
-
-                <input type="text" className="search" placeholder="Search Company" value={search} onChange={(e) => setSearch(e.target.value)} />
-
-                <div className="company-buttons">
-                    {/* add form */}
+        <div className="activity">
+            <div className="document-header">
+                <div className="document-action">
+                    <input type="text" placeholder="Search Company" value={search} onChange={(e) => setSearch(e.target.value)} />
+                </div>
+                {/** Button Add Company/Edit Company/Delete Company/Deactivate Company */}
+                <div className="document-buttons">
                     <button className="btn-upload" onClick={() => setShowAddForm(true)}>Add Company</button>
-                    {showAddForm && (
-                        <div>
-                            <h3>Add Company</h3>
-                            <input type="text" placeholder="Company Name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
-                            <button onClick={handleAddCompany}>Save</button>
-                            <button onClick={() => setShowAddForm(false)}>Cancel</button>
-                        </div>
-                    )}
-
-                    {/* edit form */}
                     <button className="btn-edit" onClick={() => {
                         if (!selectedCompany) {
                             alert("Pilih company terlebih dahulu");
@@ -81,18 +58,16 @@ function Company() {
                         setEditingCompany({ ...selectedCompany });
                         setEditMode(true);
                     }}>Edit Company</button>
-                    {editMode && (
-                        <div className="company-form">
-                            <h3>Edit Company</h3>
-                            <label>Company Name</label>
-                            <input type="text" value={editingCompany.name} onChange={(e) => setEditingCompany({ ...editingCompany, name: e.target.value })} />
-                            <div className="form-buttons">
-                            <button onClick={handleEditCompany}>Save</button>
-                                <button onClick={() => { setEditMode(false); setEditingCompany(null); }}>Cancel</button>
-                            </div>
-                        </div>
-                    )}
-
+                    <button className="btn-cancel" onClick={() => {
+                        if (!selectedCompany) {
+                            alert("Pilih company terlebih dahulu");
+                            return;
+                        }
+                        if (window.confirm(`Yakin ingin menghapus ${selectedCompany.name}?`)) {
+                            setCompanyData(deleteCompany(companyData, selectedCompany.name));
+                            setSelectedCompany(null);
+                        }
+                    }}>Delete Company</button>
                     <button className="btn-download" onClick={() => {
                         if (!selectedCompany) {
                             alert("Pilih company terlebih dahulu");
@@ -103,7 +78,7 @@ function Company() {
                     }}>Active / Deactive</button>
                 </div>
             </div>
-            <table className="company-table">
+            <table className="document-table">
                 <thead>
                     <tr>
                         <th>Company</th>
@@ -119,6 +94,32 @@ function Company() {
                     ))}
                 </tbody>
             </table>
+
+            {/* add form */}
+            {showAddForm && (
+                <div className="edit-user-form">
+                    <h3>Add Company</h3>
+                    <input type="text" placeholder="Company Name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+                    <div className="form-buttons">
+                        <button className="btn-upload" onClick={handleAddCompany}>Save</button>
+                        <button className="btn-cancel" onClick={() => setShowAddForm(false)}>Cancel</button>
+                    </div>
+                </div>
+            )}
+
+            {/* edit form */}
+            {editMode && (
+                <div className="edit-user-form">
+                    <h3>Edit Company</h3>
+                    <label>Company Name</label>
+                    <input type="text" value={editingCompany.name} onChange={(e) => setEditingCompany({ ...editingCompany, name: e.target.value })} />
+                    <div className="form-buttons">
+                        <button className="btn-upload" onClick={handleEditCompany}>Save</button>
+                        <button className="btn-cancel" onClick={() => { setEditMode(false); setEditingCompany(null); }}>Cancel</button>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }

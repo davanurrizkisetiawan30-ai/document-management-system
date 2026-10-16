@@ -19,14 +19,43 @@ export const companies = [
     }
 ];
 
-export function addCompany(companies, newCompany) {
-    return [...companies, newCompany];
+export function addCompany(companies, name) {
+    const error = validateCompanyName(companies, name);
+    if (error) {
+        return {companies, error}
+    }
+    const newCompany = {
+        name: name.trim(),
+        status: "Active"
+    };
+    return {companies: [...companies, newCompany], error: null};
 }
 
-export function editCompany(companies, oldName, updatedCompany) {
-    return companies.map((company) => 
-    company.name === oldName ? { ...company, ...updatedCompany } : company
+export function validateCompanyName(companies, name, oldName = null) {
+    const trimmedName = name.trim();
+    if (!trimmedName) {
+        return "Nama Company Wajib Diisi";
+    }
+    const nameExist = companies.some((company) => company.name.toLowerCase() === trimmedName.toLowerCase() && company.name !== oldName);
+    if (nameExist) {
+        return "Nama Company sudah digunakan";
+    }
+    return null;
+}
+
+export function editCompany(companies, oldName, newName) {
+    const error = validateCompanyName(companies, newName, oldName);
+    if (error) {
+        return {companies, error}
+    }
+    const updatedCompanies = companies.map((company) =>
+        company.name === oldName ? { ...company, name: newName.trim() } : company
     );
+    return {companies: updatedCompanies, error: null};
+}
+
+export function deleteCompany(companies, name) {
+    return companies.filter((company) => company.name !== name);
 }
 
 export function toggleCompanyStatus(companies, name) {
