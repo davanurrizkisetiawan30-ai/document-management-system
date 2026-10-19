@@ -1,4 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { ActiveSessionProvider } from './logic/activeSession';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import SelectCompany from './pages/SelectCompany';
@@ -17,23 +18,25 @@ function App() {
     const isAuthPage = isLogin || isSelectCompany;
 
     return (
-        <>
-            {!isAuthPage && <Navbar />}
-            <div className={isAuthPage ? "" : "layout"}>
-                {!isAuthPage && <Sidebar />}
-                <main className={isAuthPage ? "" : "content"}>
-                    <Routes>
-                        <Route path="/select-company" element={<SelectCompany />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/" element={<Home />} />
-                        <Route path="/document" element={<Document />} />
-                        <Route path="/user" element={<User />} />
-                        <Route path="/audit-trail" element={<AuditTrail />} />
-                        <Route path="/company" element={<Company />} /> 
-                    </Routes>
-                </main>
-            </div>
-        </>
+        <ActiveSessionProvider>
+            <>
+                {!isAuthPage && <Navbar />}
+                <div className={isAuthPage ? "" : "layout"}>
+                    {!isAuthPage && <Sidebar />}
+                    <main className={isAuthPage ? "" : "content"}>
+                        <Routes>
+                                <Route path="/select-company" element={<SelectCompany />} />
+                                <Route path="/login" element={<Login />} />
+                                <Route path="/" element={<Home />} />
+                                <Route path="/document" element={<Document />} />
+                                <Route path="/user" element={<User />} />
+                                <Route path="/audit-trail" element={<AuditTrail />} />
+                            <Route path="/company" element={<Company />} /> 
+                        </Routes>
+                    </main>
+                </div>
+            </>
+        </ActiveSessionProvider>
     );
 }
 

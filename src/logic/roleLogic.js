@@ -17,3 +17,8 @@ export function documentPermissions(role) {
         canDownload: true
     };
 }
+
+export function getCompanyRole(user, company){
+    const access = user?.companyAccess?.find((item) => item.company === company);
+    return access ? access.role : null;
+}

@@ -1,8 +1,10 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { useActiveSession } from "../logic/activeSession";
 
 function SelectCompany() {
     const location = useLocation();
     const navigate = useNavigate();
+    const { setActiveSession } = useActiveSession();
 
     const user = location.state?.user;
 
@@ -18,7 +20,8 @@ function SelectCompany() {
 
             {user.companyAccess.map((access) => (
                 <button key={access.company} onClick={() => {
-                    navigate("/", { state: { user, company: access.company, role: access.role }});
+                    setActiveSession({ user: user, company: access.company, role: access.role });
+                    navigate("/");
                 }}>{access.company} - {access.role}</button>
             ))}
         </div>

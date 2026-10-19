@@ -1,11 +1,13 @@
 import documentIcon from "../assets/icon.png";
-import { useState } from "react";
-import { companyRoles } from "../logic/roleLogic";
+import { useActiveSession } from "../logic/activeSession";
 
 function Navbar() {
 
-    const [company, setCompany] = useState("Company A");
-    const role = companyRoles[company];
+    const { activeSession, setActiveSession } = useActiveSession();
+    if (!activeSession) {
+        return null;
+    }
+    const { user, company, role } = activeSession;
 
     return (
         <nav className="navbar">
@@ -14,11 +16,19 @@ function Navbar() {
                 <h2>DOCUMENT MANAGEMENT SYSTEM</h2>
             </div>
             <div className="navbar-right">
-                <strong>Dava Nur R S</strong>
+                <strong>{user.name}</strong>
                 <span>{role}</span>
-                <select className="company-select" value={company} onChange={(e) => setCompany(e.target.value)}>
-                    <option>Company A</option>
-                    <option>Company B</option>
+                <select className="company-select" value={company} onChange={(e) => {
+                    const selectedCompany = e.target.value;
+                    const selectedAccess = user.companyAccess.find((access) => access.company === selectedCompany);
+                    if (selectedAccess) {setActiveSession({
+                        user, company: selectedAccess.company, role: selectedAccess.role
+                    });
+                }
+                }}> 
+                {user.companyAccess.map((access) => (
+                    <option key={access.company} value={access.company}>{access.company}</option>
+                ))}
                 </select>
             </div>
         </nav>
